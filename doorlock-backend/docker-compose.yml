@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  smartdoorlock:
+    container_name: sdl
+    image: baumann22/smartdoorlock
+    ports:
+      - "8080:8080"
+    restart: on-failure
