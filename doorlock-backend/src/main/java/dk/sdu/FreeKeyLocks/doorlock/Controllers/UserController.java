@@ -36,6 +36,7 @@ public class UserController {
 
     }
 
+    //TODO add logic with smart door lock
     @PostMapping(value = "/unlock")
     public ResponseEntity unlock(@RequestBody UnlockDoorReq unlockDoorReq) {
         Optional<User> user = userRepository.findById(unlockDoorReq.getUserID());
