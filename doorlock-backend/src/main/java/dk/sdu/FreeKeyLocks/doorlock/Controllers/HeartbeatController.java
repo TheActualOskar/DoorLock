@@ -2,7 +2,6 @@ package dk.sdu.FreeKeyLocks.doorlock.Controllers;
 
 import dk.sdu.FreeKeyLocks.doorlock.Model.DoorLock;
 import dk.sdu.FreeKeyLocks.doorlock.Model.HeartBeat;
-import dk.sdu.FreeKeyLocks.doorlock.Model.LogEntry;
 import dk.sdu.FreeKeyLocks.doorlock.Repository.DoorLockRepository;
 import dk.sdu.FreeKeyLocks.doorlock.Repository.HeatBeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,10 @@
 package dk.sdu.FreeKeyLocks.doorlock.Model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class UnlockDoorReq {
 
     private int doorID;
@@ -10,19 +15,4 @@ public class UnlockDoorReq {
         this.userID = userID;
     }
 
-    public int getDoorID() {
-        return doorID;
-    }
-
-    public void setDoorID(int doorID) {
-        this.doorID = doorID;
-    }
-
-    public int getUserID() {
-        return userID;
-    }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
 }
