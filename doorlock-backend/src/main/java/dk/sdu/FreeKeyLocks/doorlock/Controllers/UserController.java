@@ -45,34 +45,39 @@ public class UserController {
         Optional<User> user = userRepository.findById(unlockDoorReq.getUserID());
         if (user.isPresent()) {
             List<DoorLock> doorLocks = user.get().getDoorLocks().stream().toList();
-            if (doorLocks.get(0).getId() == unlockDoorReq.getDoorID()) {
 
-                LogEntry logEntry = new LogEntry();
-                logEntry.setMessage("Door unlocked by:" + unlockDoorReq.getUserID());
-                logEntry.setTimestamp(new Timestamp(System.currentTimeMillis()));
-                logEntry.setDoorLock(doorLocks.get(0));
-                logEntryRepository.save(logEntry);
-                MqttController.unlockDoorLock(doorLocks.get(0).getId());
-                return ResponseEntity.ok("Door successfully unlocked");
+            for (DoorLock doorLock : doorLocks) {
+                if (doorLock.getId() == unlockDoorReq.getDoorID()) {
+                    LogEntry logEntry = new LogEntry();
+                    logEntry.setMessage("Door unlocked by:" + unlockDoorReq.getUserID());
+                    logEntry.setTimestamp(new Timestamp(System.currentTimeMillis()));
+                    logEntry.setDoorLock(doorLocks.get(0));
+                    logEntryRepository.save(logEntry);
+                    MqttController.unlockDoorLock(doorLocks.get(0).getId());
+                    return ResponseEntity.ok("Door successfully unlocked");
+                }
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
     }
+
     //TODO add logic with smart door lock
     @PostMapping(value = "/lock")
     public ResponseEntity lock(@RequestBody LockDoorReq lockDoorReq) {
         Optional<User> user = userRepository.findById(lockDoorReq.getUserID());
         if (user.isPresent()) {
             List<DoorLock> doorLocks = user.get().getDoorLocks().stream().toList();
-            if (doorLocks.get(0).getId() == lockDoorReq.getDoorID()) {
-                LogEntry logEntry = new LogEntry();
-                logEntry.setMessage("Door locked by:" + lockDoorReq.getUserID());
-                logEntry.setTimestamp(new Timestamp(System.currentTimeMillis()));
-                logEntry.setDoorLock(doorLocks.get(0));
-                logEntryRepository.save(logEntry);
-                MqttController.lockDoorLock(doorLocks.get(0).getId());
-                return ResponseEntity.ok("Door successfully locked");
+            for (DoorLock doorLock : doorLocks) {
+                if (doorLock.getId() == lockDoorReq.getDoorID()) {
+                    LogEntry logEntry = new LogEntry();
+                    logEntry.setMessage("Door locked by:" + lockDoorReq.getUserID());
+                    logEntry.setTimestamp(new Timestamp(System.currentTimeMillis()));
+                    logEntry.setDoorLock(doorLocks.get(0));
+                    logEntryRepository.save(logEntry);
+                    MqttController.lockDoorLock(doorLocks.get(0).getId());
+                    return ResponseEntity.ok("Door successfully locked");
+                }
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
