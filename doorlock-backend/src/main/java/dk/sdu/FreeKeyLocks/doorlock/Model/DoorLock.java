@@ -23,6 +23,8 @@ public class DoorLock {
     @Column(name = "doorlock_id")
     private int id;
 
+    private String name;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -38,9 +40,7 @@ public class DoorLock {
     @JsonManagedReference
     private Collection<LogEntry> logEntries;
 
-    @OneToMany(mappedBy = "doorLock")
-    @JsonManagedReference
-    private Collection<AccessList> accessLists;
+
 
 
 }

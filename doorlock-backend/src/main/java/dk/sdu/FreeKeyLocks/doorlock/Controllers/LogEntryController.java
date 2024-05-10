@@ -36,17 +36,5 @@ public class LogEntryController {
         } else return null;
     }
 
-    @GetMapping("/test")
-    public ResponseEntity testAddEntry() {
 
-        LogEntry logEntry = new LogEntry();
-
-        logEntry.setTimestamp(new Timestamp(System.currentTimeMillis()));
-        logEntry.setMessage("Random test message: " + new Timestamp(System.currentTimeMillis()).toString());
-        logEntry.setDoorLock(doorLockRepository.getReferenceById(1));
-        logEntryRepository.save(logEntry);
-
-        return ResponseEntity.ok("saved test to database.");
-    }
-
-}
+}d

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -30,11 +31,8 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private Set<DoorLock> doorLocks;
+    private List<DoorLock> doorLocks;
 
-    @ManyToMany
-    @JsonManagedReference
-    private Set<AccessList> accessLists;
 
 
 

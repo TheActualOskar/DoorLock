@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+
 @CrossOrigin("*")
 @RequestMapping("/test")
 @RestController
@@ -37,18 +38,17 @@ public class MqttController {
     //TODO add unlock logic
     @GetMapping("/{id}")
     public static void unlockDoorLock(@PathVariable("id") int id) {
-
-        publisher.send("sensor/unlockdoor/" + id,"Hello",2);
+        publisher.send("sensor/unlock/" + id, "unlock " + new Timestamp(System.currentTimeMillis()), 2);
     }
 
 
     //TODO is this usefull?
-    @MqttSubscribe("sensor/unlock/+")
+    @MqttSubscribe(value = "sensor/unlock/+", qos = 1)
     public void mqttrecieve(String topic, MqttMessage message, @Payload String payload) {
         System.out.println("message from the gods: " + payload);
     }
 
-    @MqttSubscribe("sensor/log/+")
+    @MqttSubscribe(value = "sensor/log/+", qos = 1)
     public void mqttrecieveLog(String topic, MqttMessage message, @Payload String payload) {
         LogEntry log = new LogEntry();
 
@@ -65,7 +65,7 @@ public class MqttController {
 
     }
 
-    @MqttSubscribe("sensor/heartbeat/+")
+    @MqttSubscribe(value = "sensor/heartbeat/+", qos = 1)
     public void mqttrecieveheartbeat(String topic, MqttMessage message, @Payload String payload) {
         HeartBeat heartBeat = new HeartBeat();
 
