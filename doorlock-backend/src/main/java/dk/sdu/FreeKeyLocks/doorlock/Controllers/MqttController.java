@@ -35,9 +35,14 @@ public class MqttController {
     }
 
 
-    //TODO add unlock logic
-    @GetMapping("/{id}")
-    public static void unlockDoorLock(@PathVariable("id") int id) {
+    public static void lockDoorLock(int id) {
+
+        publisher.send("sensor/unlock/" + id, "lock " + new Timestamp(System.currentTimeMillis()), 2);
+    }
+
+
+    public static void unlockDoorLock(int id) {
+
         publisher.send("sensor/unlock/" + id, "unlock " + new Timestamp(System.currentTimeMillis()), 2);
     }
 

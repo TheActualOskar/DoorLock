@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Collection;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -38,7 +39,7 @@ public class DoorLock {
 
     @OneToMany(mappedBy = "doorLock")
     @JsonManagedReference
-    private Collection<LogEntry> logEntries;
+    private List<LogEntry> logEntries;
 
 
 

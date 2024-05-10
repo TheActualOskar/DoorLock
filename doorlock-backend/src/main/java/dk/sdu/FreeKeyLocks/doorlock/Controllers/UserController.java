@@ -51,6 +51,8 @@ public class UserController {
                 logEntry.setMessage("Door unlocked by:" + unlockDoorReq.getUserID());
                 logEntry.setTimestamp(new Timestamp(System.currentTimeMillis()));
                 logEntry.setDoorLock(doorLocks.get(0));
+                logEntryRepository.save(logEntry);
+                MqttController.unlockDoorLock(doorLocks.get(0).getId());
                 return ResponseEntity.ok("Door successfully unlocked");
             }
         }
@@ -65,11 +67,11 @@ public class UserController {
             List<DoorLock> doorLocks = user.get().getDoorLocks().stream().toList();
             if (doorLocks.get(0).getId() == lockDoorReq.getDoorID()) {
                 LogEntry logEntry = new LogEntry();
-                logEntry.setMessage("Door unlocked by:" + lockDoorReq.getUserID());
+                logEntry.setMessage("Door locked by:" + lockDoorReq.getUserID());
                 logEntry.setTimestamp(new Timestamp(System.currentTimeMillis()));
                 logEntry.setDoorLock(doorLocks.get(0));
                 logEntryRepository.save(logEntry);
-
+                MqttController.lockDoorLock(doorLocks.get(0).getId());
                 return ResponseEntity.ok("Door successfully locked");
             }
         }
