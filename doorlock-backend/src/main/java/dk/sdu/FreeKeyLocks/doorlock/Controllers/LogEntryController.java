@@ -37,4 +37,4 @@ public class LogEntryController {
     }
 
 
-}d
+}
