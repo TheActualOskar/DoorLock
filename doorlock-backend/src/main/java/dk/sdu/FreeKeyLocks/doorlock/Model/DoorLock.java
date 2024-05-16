@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,17 +26,14 @@ public class DoorLock {
     private int id;
 
     private String name;
-
+    private String status;
+    private Timestamp lastCheckIn;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
 
-
-    @OneToMany(mappedBy = "doorLock")
-    @JsonManagedReference
-    private Collection<HeartBeat> heartBeat;
 
     @OneToMany(mappedBy = "doorLock")
     @JsonManagedReference
