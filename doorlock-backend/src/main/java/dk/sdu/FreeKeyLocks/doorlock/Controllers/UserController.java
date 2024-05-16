@@ -49,7 +49,7 @@ public class UserController {
             for (DoorLock doorLock : doorLocks) {
                 if (doorLock.getId() == unlockDoorReq.getDoorID()) {
                     LogEntry logEntry = new LogEntry();
-                    logEntry.setMessage("Door unlocked by:" + unlockDoorReq.getUserID());
+                    logEntry.setMessage("Door unlocked by: \n" + user.get().getFirstName() + " " + user.get().getLastName() + "\n" + user.get().getEmail());
                     logEntry.setTimestamp(new Timestamp(System.currentTimeMillis()));
                     logEntry.setDoorLock(doorLock);
                     logEntryRepository.save(logEntry);
@@ -71,7 +71,7 @@ public class UserController {
             for (DoorLock doorLock : doorLocks) {
                 if (doorLock.getId() == lockDoorReq.getDoorID()) {
                     LogEntry logEntry = new LogEntry();
-                    logEntry.setMessage("Door locked by:" + lockDoorReq.getUserID());
+                    logEntry.setMessage("Door locked by: \n" + user.get().getFirstName() + " " + user.get().getLastName() + "\n" + user.get().getEmail());
                     logEntry.setTimestamp(new Timestamp(System.currentTimeMillis()));
                     logEntry.setDoorLock(doorLocks.get(0));
                     logEntryRepository.save(logEntry);

@@ -46,12 +46,6 @@ public class MqttController {
     }
 
 
-    //TODO is this usefull?
-    @MqttSubscribe(value = "sensor/unlock/+", qos = 1)
-    public void mqttrecieve(String topic, MqttMessage message, @Payload String payload) {
-        System.out.println("message from the gods: " + payload);
-    }
-
     @MqttSubscribe(value = "sensor/log/+", qos = 1)
     public void mqttrecieveLog(String topic, MqttMessage message, @Payload String payload) {
         LogEntry log = new LogEntry();

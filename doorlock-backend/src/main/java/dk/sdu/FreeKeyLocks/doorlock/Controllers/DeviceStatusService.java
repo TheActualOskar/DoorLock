@@ -29,7 +29,7 @@ public class DeviceStatusService {
         deviceLastSeen.forEach((id, lastSeen) -> {
             if (Duration.between(lastSeen, now).compareTo(HEARTBEAT_INTERVAL) > 0) {
                 // Mark device as offline
-                updateDeviceStatus(id, "Offline");
+                updateDeviceStatus(id, "Offline", false);
             }
         });
     }
@@ -37,17 +37,23 @@ public class DeviceStatusService {
 
     public void handleHeartbeatMessage(int deviceId, Instant timestamp) {
         deviceLastSeen.put(deviceId, timestamp);
-        updateDeviceStatus(deviceId, "Online");
+        updateDeviceStatus(deviceId, "Online", true);
     }
 
-    private void updateDeviceStatus(int deviceId, String status) {
+    private void updateDeviceStatus(int deviceId, String status, boolean isOnline) {
         DoorLock doorLock = doorLockRepository.getReferenceById(deviceId);
-        if (doorLock != null) {
-            doorLock.setStatus(status);
-            doorLock.setLastCheckIn(new Timestamp(System.currentTimeMillis()));
-            doorLockRepository.save(doorLock);
+        if (isOnline) {
+            if (doorLock != null) {
+                doorLock.setStatus(status);
+                doorLock.setLastCheckIn(new Timestamp(System.currentTimeMillis()));
+                doorLockRepository.save(doorLock);
+            }
+        } else {
+            if (doorLock != null) {
+                doorLock.setStatus(status);
+                doorLockRepository.save(doorLock);
+            }
         }
-        System.out.printf("Device %d is %s%n", deviceId, status);
 
     }
 }
