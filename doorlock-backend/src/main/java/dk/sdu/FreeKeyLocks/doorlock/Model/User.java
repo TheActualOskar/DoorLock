@@ -33,9 +33,11 @@ public class User {
     @JsonManagedReference
     private List<DoorLock> doorLocks;
 
-
-
-
-
-
+    @ManyToMany
+    @JsonManagedReference
+    @JoinTable(
+            name = "accesslist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "doorlock_id"))
+    List<DoorLock> accessList;
 }

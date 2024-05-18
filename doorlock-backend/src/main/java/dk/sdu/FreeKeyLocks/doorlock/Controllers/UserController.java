@@ -39,6 +39,7 @@ public class UserController {
 
     }
 
+
     //TODO add logic with smart door lock
     @PostMapping(value = "/unlock")
     public ResponseEntity unlock(@RequestBody UnlockDoorReq unlockDoorReq) {
@@ -67,7 +68,8 @@ public class UserController {
     public ResponseEntity lock(@RequestBody LockDoorReq lockDoorReq) {
         Optional<User> user = userRepository.findById(lockDoorReq.getUserID());
         if (user.isPresent()) {
-            List<DoorLock> doorLocks = user.get().getDoorLocks().stream().toList();
+            List<DoorLock> doorLocks = user.get().getDoorLocks();
+            doorLocks.addAll(user.get().getAccessList());
             for (DoorLock doorLock : doorLocks) {
                 if (doorLock.getId() == lockDoorReq.getDoorID()) {
                     LogEntry logEntry = new LogEntry();
@@ -100,6 +102,8 @@ public class UserController {
 
         Optional<User> userData = userRepository.findById(id);
         if (userData.isPresent()) {
+            List<DoorLock> doorLocks = userData.get().getDoorLocks();
+            doorLocks.addAll(userData.get().getAccessList());
 
             return new ResponseEntity<>(userData.get().getDoorLocks(), HttpStatus.OK);
         }

@@ -39,7 +39,9 @@ public class DoorLock {
     @JsonManagedReference
     private List<LogEntry> logEntries;
 
-
+    @ManyToMany(mappedBy = "accessList")
+    @JsonBackReference
+    List<User> usersAccess;
 
 
 }
