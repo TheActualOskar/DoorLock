@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+chan pressLock, pressUnlock;
+
+chan sendHeartBeat;
+chan heartBeat;
+
+chan mqttUnlockDoor;
+chan mqttLockDoor;</declaration>
+	<template>
+		<name>Frontend</name>
+		<parameter>chan &amp;pressLock, chan &amp;pressUnlock, chan &amp;unlockError, chan &amp;lockError</parameter>
+		<declaration>chan unlock, lock;</declaration>
+		<location id="id0" x="-59" y="-127">
+			<name x="-127" y="-170">DisplayLockStatus</name>
+		</location>
+		<location id="id1" x="136" y="-127">
+			<name x="161" y="-144">unlockPressed</name>
+		</location>
+		<location id="id2" x="-238" y="-127">
+			<name x="-348" y="-144">lockPressed</name>
+		</location>
+		<location id="id3" x="-144" y="-42">
+			<name x="-187" y="-34">DisplayLock</name>
+		</location>
+		<location id="id4" x="59" y="-42">
+			<name x="8" y="-25">DisplayUnlock</name>
+		</location>
+		<location id="id5" x="-59" y="-306">
+			<name x="-93" y="-340">ShowError</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id6">
+			<source ref="id5"/>
+			<target ref="id0"/>
+		</transition>
+		<transition id="id7">
+			<source ref="id1"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="51" y="-229">unlockError?</label>
+		</transition>
+		<transition id="id8">
+			<source ref="id2"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-238" y="-229">lockError?</label>
+		</transition>
+		<transition id="id9">
+			<source ref="id4"/>
+			<target ref="id0"/>
+		</transition>
+		<transition id="id10">
+			<source ref="id3"/>
+			<target ref="id0"/>
+		</transition>
+		<transition id="id11">
+			<source ref="id1"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="102" y="-85">unlock!</label>
+		</transition>
+		<transition id="id12">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-238" y="-85">lock!</label>
+		</transition>
+		<transition id="id13">
+			<source ref="id0"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-178" y="-144">pressLock?</label>
+		</transition>
+		<transition id="id14">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-17" y="-144">pressUnlock?</label>
+		</transition>
+	</template>
+	<template>
+		<name>Backend</name>
+		<location id="id15" x="0" y="0">
+		</location>
+		<init ref="id15"/>
+	</template>
+	<template>
+		<name>MQTT</name>
+		<declaration>
+</declaration>
+		<location id="id16" x="-195" y="-34">
+			<name x="-212" y="-17">Idle</name>
+		</location>
+		<location id="id17" x="-195" y="-178">
+			<name x="-246" y="-221">ReciveHeartbeat</name>
+		</location>
+		<location id="id18" x="25" y="-34">
+			<name x="-43" y="-77">UnlockDoorRequest</name>
+		</location>
+		<init ref="id16"/>
+		<transition id="id19">
+			<source ref="id16"/>
+			<target ref="id18"/>
+		</transition>
+		<transition id="id20">
+			<source ref="id16"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="-136" y="-110">heartBeat?</label>
+			<nail x="-144" y="-102"/>
+		</transition>
+		<transition id="id21">
+			<source ref="id17"/>
+			<target ref="id16"/>
+			<label kind="synchronisation" x="-323" y="-119">sendHeartBeat!</label>
+		</transition>
+	</template>
+	<template>
+		<name>Lock</name>
+		<parameter>chan &amp;pressUnlock, chan &amp;pressLock</parameter>
+		<declaration>clock lockTime;
+bool unlocked = false;
+</declaration>
+		<location id="id22" x="-272" y="-51">
+			<name x="-297" y="-85">Locked</name>
+		</location>
+		<location id="id23" x="-136" y="93">
+			<name x="-146" y="59">Unlocking</name>
+		</location>
+		<location id="id24" x="-408" y="93">
+			<name x="-442" y="50">Locking</name>
+		</location>
+		<location id="id25" x="-272" y="255">
+			<name x="-306" y="272">Unlocked</name>
+		</location>
+		<init ref="id22"/>
+		<transition id="id26">
+			<source ref="id25"/>
+			<target ref="id24"/>
+			<label kind="guard" x="-348" y="68">unlocked == true</label>
+			<label kind="synchronisation" x="-348" y="85">pressLock?</label>
+			<nail x="-272" y="119"/>
+		</transition>
+		<transition id="id27">
+			<source ref="id24"/>
+			<target ref="id22"/>
+			<label kind="assignment" x="-484" y="-8">unlocked = false</label>
+		</transition>
+		<transition id="id28">
+			<source ref="id25"/>
+			<target ref="id24"/>
+			<label kind="guard" x="-612" y="178">lockTime&lt;=10 &amp;&amp; unlocked == true</label>
+		</transition>
+		<transition id="id29">
+			<source ref="id23"/>
+			<target ref="id25"/>
+			<label kind="assignment" x="-195" y="178">lockTime := 0,
+unlocked = true</label>
+		</transition>
+		<transition id="id30">
+			<source ref="id22"/>
+			<target ref="id23"/>
+			<label kind="guard" x="-204" y="-8">unlocked == false</label>
+			<label kind="synchronisation" x="-204" y="-25">pressUnlock?</label>
+		</transition>
+	</template>
+	<template>
+		<name>User</name>
+		<location id="id31" x="-646" y="-127">
+			<name x="-697" y="-170">WaitForInput</name>
+		</location>
+		<init ref="id31"/>
+		<transition id="id32">
+			<source ref="id31"/>
+			<target ref="id31"/>
+			<label kind="synchronisation" x="-816" y="-119">pressLock!</label>
+			<nail x="-722" y="-17"/>
+			<nail x="-790" y="-76"/>
+		</transition>
+		<transition id="id33">
+			<source ref="id31"/>
+			<target ref="id31"/>
+			<label kind="synchronisation" x="-586" y="-119">pressUnlock!</label>
+			<nail x="-501" y="-42"/>
+			<nail x="-586" y="-8"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Process = User();
+Process2 = Lock(pressUnlock, pressLock);
+// List one or more processes to be composed into a system.
+system Process, Process2;
+
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>
