@@ -1,7 +1,6 @@
 package dk.sdu.FreeKeyLocks.doorlock.Controllers;
 
 import dk.sdu.FreeKeyLocks.doorlock.Model.*;
-import dk.sdu.FreeKeyLocks.doorlock.Repository.DoorLockRepository;
 import dk.sdu.FreeKeyLocks.doorlock.Repository.LogEntryRepository;
 import dk.sdu.FreeKeyLocks.doorlock.Repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -17,12 +16,10 @@ import java.util.*;
 public class UserController {
 
     private final UserRepository userRepository;
-    private final DoorLockRepository doorLockRepository;
     private final LogEntryRepository logEntryRepository;
 
-    public UserController(UserRepository repository, DoorLockRepository doorLockRepository, LogEntryRepository logEntryRepository) {
+    public UserController(UserRepository repository, LogEntryRepository logEntryRepository) {
         this.userRepository = repository;
-        this.doorLockRepository = doorLockRepository;
         this.logEntryRepository = logEntryRepository;
     }
 
@@ -45,8 +42,8 @@ public class UserController {
     public ResponseEntity unlock(@RequestBody UnlockDoorReq unlockDoorReq) {
         Optional<User> user = userRepository.findById(unlockDoorReq.getUserID());
         if (user.isPresent()) {
-            List<DoorLock> doorLocks = user.get().getDoorLocks().stream().toList();
-
+            List<DoorLock> doorLocks = user.get().getDoorLocks();
+            doorLocks.addAll(user.get().getAccessList());
             for (DoorLock doorLock : doorLocks) {
                 if (doorLock.getId() == unlockDoorReq.getDoorID()) {
                     LogEntry logEntry = new LogEntry();
@@ -54,7 +51,7 @@ public class UserController {
                     logEntry.setTimestamp(new Timestamp(System.currentTimeMillis()));
                     logEntry.setDoorLock(doorLock);
                     logEntryRepository.save(logEntry);
-                    MqttController.unlockDoorLock(doorLocks.get(0).getId());
+                    MqttController.unlockDoorLock(doorLock.getId());
                     return ResponseEntity.ok("Door successfully unlocked");
                 }
             }
@@ -75,7 +72,7 @@ public class UserController {
                     LogEntry logEntry = new LogEntry();
                     logEntry.setMessage("Door locked by: \n" + user.get().getFirstName() + " " + user.get().getLastName() + "\n" + user.get().getEmail());
                     logEntry.setTimestamp(new Timestamp(System.currentTimeMillis()));
-                    logEntry.setDoorLock(doorLocks.get(0));
+                    logEntry.setDoorLock(doorLock);
                     logEntryRepository.save(logEntry);
                     MqttController.lockDoorLock(doorLock.getId());
                     return ResponseEntity.ok("Door successfully locked");
@@ -105,15 +102,15 @@ public class UserController {
             List<DoorLock> doorLocks = userData.get().getDoorLocks();
             doorLocks.addAll(userData.get().getAccessList());
 
-            return new ResponseEntity<>(userData.get().getDoorLocks(), HttpStatus.OK);
+
+            return new ResponseEntity<>(doorLocks, HttpStatus.OK);
         }
 
-        return ResponseEntity.ok("test");
+        return ResponseEntity.ok("User not found");
     }
 
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody LoginUserReq loginUserReq) {
-        System.out.println("some request came.. idk random?");
         User userData = userRepository.findByEmail(loginUserReq.getEmail());
         if (userData != null) {
             if (userData.getPassword().equals(loginUserReq.getPassword())) {
