@@ -3,6 +3,7 @@
 <nta>
 	<declaration>// Place global declarations here.
 chan pressLock, pressUnlock;
+urgent chan pressLockFinal, pressUnlockFinal, lockConfirmedFinal, unlockConfirmedFinal;
 
 chan sendHeartBeat;
 chan heartBeat;
@@ -20,75 +21,81 @@ bool requestComplete;</declaration>
 		<location id="id0" x="-59" y="-59">
 			<name x="-127" y="-102">DisplayLockStatus</name>
 		</location>
-		<location id="id1" x="264" y="-26">
-			<name x="289" y="-43">unlockPressed</name>
+		<location id="id1" x="263" y="-59">
+			<name x="288" y="-76">unlockPressed</name>
 			<committed/>
 		</location>
-		<location id="id2" x="-357" y="0">
-			<name x="-467" y="-17">lockPressed</name>
+		<location id="id2" x="-374" y="-59">
+			<name x="-484" y="-76">lockPressed</name>
 			<committed/>
 		</location>
-		<location id="id3" x="-195" y="246">
-			<name x="-238" y="254">DisplayLock</name>
+		<location id="id3" x="-289" y="68">
+			<name x="-340" y="85">DisplayLock</name>
 		</location>
-		<location id="id4" x="144" y="238">
-			<name x="93" y="255">DisplayUnlock</name>
+		<location id="id4" x="161" y="68">
+			<name x="110" y="85">DisplayUnlock</name>
 		</location>
-		<location id="id5" x="-59" y="-306">
-			<name x="-93" y="-340">ShowError</name>
+		<location id="id5" x="-59" y="-170">
+			<name x="-93" y="-204">ShowError</name>
 		</location>
 		<init ref="id0"/>
 		<transition id="id6">
 			<source ref="id5"/>
 			<target ref="id0"/>
-			<label kind="assignment" x="-136" y="-187">processing = false</label>
+			<label kind="assignment" x="-51" y="-136">processing = false</label>
 		</transition>
 		<transition id="id7">
 			<source ref="id1"/>
 			<target ref="id5"/>
-			<label kind="synchronisation" x="51" y="-229">unlockError?</label>
+			<label kind="synchronisation" x="51" y="-187">unlockError?</label>
+			<nail x="263" y="-170"/>
 		</transition>
 		<transition id="id8">
 			<source ref="id2"/>
 			<target ref="id5"/>
-			<label kind="synchronisation" x="-238" y="-229">lockError?</label>
+			<label kind="synchronisation" x="-255" y="-187">lockError?</label>
+			<nail x="-374" y="-170"/>
 		</transition>
 		<transition id="id9">
 			<source ref="id4"/>
 			<target ref="id0"/>
-			<label kind="guard" x="-34" y="51">requestComplete == true</label>
-			<label kind="assignment" x="-17" y="76">processing = false</label>
+			<label kind="guard" x="-34" y="34">requestComplete == true</label>
+			<label kind="assignment" x="-34" y="51">processing = false</label>
+			<nail x="-59" y="68"/>
 		</transition>
 		<transition id="id10">
 			<source ref="id3"/>
 			<target ref="id0"/>
-			<label kind="guard" x="-212" y="102">requestComplete == true</label>
-			<label kind="assignment" x="-195" y="76">processing = false</label>
+			<label kind="guard" x="-263" y="42">requestComplete == true</label>
+			<label kind="assignment" x="-263" y="25">processing = false</label>
+			<nail x="-59" y="68"/>
 		</transition>
 		<transition id="id11">
 			<source ref="id1"/>
 			<target ref="id4"/>
-			<label kind="synchronisation" x="170" y="51">unlock!</label>
+			<label kind="synchronisation" x="195" y="42">unlock!</label>
+			<nail x="263" y="68"/>
 		</transition>
 		<transition id="id12">
 			<source ref="id2"/>
 			<target ref="id3"/>
-			<label kind="synchronisation" x="-365" y="102">lock!</label>
+			<label kind="synchronisation" x="-425" y="0">lock!</label>
+			<nail x="-374" y="68"/>
 		</transition>
 		<transition id="id13">
 			<source ref="id0"/>
 			<target ref="id2"/>
-			<label kind="guard" x="-280" y="-8">processing == false</label>
-			<label kind="synchronisation" x="-178" y="-68">pressLock?</label>
-			<label kind="assignment" x="-289" y="-51">processing = true,
+			<label kind="guard" x="-289" y="-25">processing == false</label>
+			<label kind="synchronisation" x="-289" y="-76">pressLock?</label>
+			<label kind="assignment" x="-289" y="-59">processing = true,
 requestComplete = false</label>
 		</transition>
 		<transition id="id14">
 			<source ref="id0"/>
 			<target ref="id1"/>
-			<label kind="guard" x="25" y="-85">processing == false</label>
-			<label kind="synchronisation" x="7" y="-68">pressUnlock?</label>
-			<label kind="assignment" x="17" y="-34">processing = true,
+			<label kind="guard" x="17" y="-25">processing == false</label>
+			<label kind="synchronisation" x="17" y="-76">pressUnlock?</label>
+			<label kind="assignment" x="17" y="-59">processing = true,
 requestComplete = false</label>
 		</transition>
 	</template>
@@ -99,61 +106,66 @@ requestComplete = false</label>
 		<location id="id15" x="-714" y="-68">
 			<name x="-749" y="-102">sendLock</name>
 		</location>
-		<location id="id16" x="-484" y="-68">
-			<name x="-561" y="-102">lockRequestRecieved</name>
+		<location id="id16" x="-501" y="-68">
+			<name x="-578" y="-110">lockRequestRecieved</name>
 			<committed/>
 		</location>
 		<location id="id17" x="-305" y="-68">
 			<name x="-323" y="-102">idle</name>
 		</location>
 		<location id="id18" x="-76" y="-68">
-			<name x="-127" y="-110">unlockRequestRecieved</name>
+			<name x="-170" y="-110">unlockRequestRecieved</name>
 			<committed/>
 		</location>
 		<location id="id19" x="137" y="-68">
-			<name x="102" y="-102">SendUnlock</name>
+			<name x="161" y="-76">SendUnlock</name>
 		</location>
 		<init ref="id17"/>
 		<transition id="id20">
 			<source ref="id15"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-544" y="119">lockTimer &gt;= 10</label>
-			<label kind="synchronisation" x="-535" y="136">lockError!</label>
-			<nail x="-493" y="122"/>
+			<label kind="guard" x="-553" y="0">lockTimer &gt;= 10</label>
+			<label kind="synchronisation" x="-544" y="17">lockError!</label>
+			<nail x="-688" y="-8"/>
+			<nail x="-323" y="-8"/>
 		</transition>
 		<transition id="id21">
 			<source ref="id15"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-544" y="8">lockTimer&lt;=10</label>
-			<label kind="synchronisation" x="-569" y="-34">lockConfirmed?</label>
-			<label kind="assignment" x="-586" y="-8">requestComplete = true</label>
-			<nail x="-494" y="63"/>
+			<label kind="guard" x="-612" y="-154">lockTimer&lt;=10</label>
+			<label kind="synchronisation" x="-612" y="-188">lockConfirmed?</label>
+			<label kind="assignment" x="-612" y="-170">requestComplete = true</label>
+			<nail x="-688" y="-127"/>
+			<nail x="-331" y="-127"/>
 		</transition>
 		<transition id="id22">
 			<source ref="id16"/>
 			<target ref="id15"/>
-			<label kind="synchronisation" x="-646" y="-85">mqttSendLock!</label>
-			<label kind="assignment" x="-646" y="-68">lockTimer := 0</label>
+			<label kind="synchronisation" x="-654" y="-85">mqttSendLock!</label>
+			<label kind="assignment" x="-654" y="-68">lockTimer := 0</label>
 		</transition>
 		<transition id="id23">
 			<source ref="id17"/>
 			<target ref="id16"/>
-			<label kind="synchronisation" x="-382" y="-85">lock?</label>
+			<label kind="synchronisation" x="-408" y="-85">lock?</label>
 		</transition>
 		<transition id="id24">
 			<source ref="id19"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-136" y="8">unlockTimer&lt;=10</label>
-			<label kind="synchronisation" x="-127" y="161">unlockError!</label>
-			<nail x="-76" y="136"/>
+			<label kind="guard" x="-153" y="-25">unlockTimer&lt;=10</label>
+			<label kind="synchronisation" x="-153" y="-8">unlockError!</label>
+			<nail x="93" y="-8"/>
+			<nail x="-280" y="-8"/>
 		</transition>
 		<transition id="id25">
 			<source ref="id19"/>
 			<target ref="id17"/>
-			<label kind="guard" x="-152" y="144">unlockTimer &gt;= 10</label>
-			<label kind="synchronisation" x="-153" y="-34">unlockConfirmed?</label>
-			<label kind="assignment" x="-153" y="-8">requestComplete = true</label>
-			<nail x="-84" y="59"/>
+			<label kind="guard" x="-177" y="-154">unlockTimer &gt;= 10</label>
+			<label kind="synchronisation" x="-177" y="-188">unlockConfirmed?</label>
+			<label kind="assignment" x="-178" y="-170">requestComplete = true</label>
+			<nail x="102" y="-127"/>
+			<nail x="-76" y="-127"/>
+			<nail x="-289" y="-127"/>
 		</transition>
 		<transition id="id26">
 			<source ref="id18"/>
@@ -169,138 +181,196 @@ requestComplete = false</label>
 	</template>
 	<template>
 		<name>MQTT</name>
-		<parameter>chan &amp;mqttSendUnlock, chan &amp;mqttSendLock</parameter>
+		<parameter>chan &amp;mqttSendUnlock, chan &amp;mqttSendLock,urgent chan &amp;lockConfirmedFinal, urgent chan &amp;unlockConfirmedFinal</parameter>
 		<declaration>clock mqttLockTimer, mqttUnlockTimer;
 </declaration>
-		<location id="id28" x="110" y="-34">
+		<location id="id28" x="-697" y="-34">
+		</location>
+		<location id="id29" x="263" y="-34">
+			<name x="253" y="-68">SendLockFinal</name>
+		</location>
+		<location id="id30" x="110" y="-34">
 			<name x="100" y="-68">Lock</name>
 		</location>
-		<location id="id29" x="-476" y="-34">
+		<location id="id31" x="-476" y="-34">
 			<name x="-486" y="-68">Unlock</name>
 		</location>
-		<location id="id30" x="-195" y="-34">
+		<location id="id32" x="-195" y="-34">
 			<name x="-212" y="-17">Idle</name>
 		</location>
-		<location id="id31" x="-195" y="-178">
+		<location id="id33" x="-195" y="-178">
 			<name x="-246" y="-221">ReciveHeartbeat</name>
 			<committed/>
 		</location>
-		<init ref="id30"/>
-		<transition id="id32">
-			<source ref="id28"/>
-			<target ref="id30"/>
-			<label kind="guard" x="-68" y="187">mqttLockTimer&gt;=10</label>
-			<label kind="synchronisation" x="-59" y="170">lockError!</label>
-			<nail x="-8" y="170"/>
+		<location id="id34" x="119" y="119">
+		</location>
+		<location id="id35" x="-612" y="110">
+		</location>
+		<init ref="id32"/>
+		<transition id="id36">
+			<source ref="id35"/>
+			<target ref="id32"/>
+			<label kind="synchronisation" x="-527" y="93">unlockConfirmed!</label>
+			<nail x="-348" y="110"/>
 		</transition>
-		<transition id="id33">
+		<transition id="id37">
+			<source ref="id28"/>
+			<target ref="id35"/>
+			<label kind="synchronisation" x="-663" y="8">unlockConfirmedFinal?</label>
+		</transition>
+		<transition id="id38">
+			<source ref="id34"/>
+			<target ref="id32"/>
+			<label kind="synchronisation" x="-42" y="102">lockConfirmed!</label>
+			<nail x="-93" y="119"/>
+		</transition>
+		<transition id="id39">
 			<source ref="id29"/>
-			<target ref="id30"/>
-			<label kind="guard" x="-356" y="153">mqttUnlockTimer&gt;=10</label>
-			<label kind="synchronisation" x="-348" y="170">unlockError!</label>
-			<nail x="-297" y="153"/>
+			<target ref="id34"/>
+			<label kind="synchronisation" x="102" y="34">lockConfirmedFinal?</label>
 		</transition>
-		<transition id="id34">
+		<transition id="id40">
 			<source ref="id28"/>
-			<target ref="id30"/>
-			<label kind="synchronisation" x="-76" y="51">lockConfirmed!</label>
-			<nail x="-35" y="55"/>
+			<target ref="id32"/>
+			<label kind="guard" x="-544" y="161">mqttUnlockTimer&gt;=10</label>
+			<label kind="synchronisation" x="-527" y="144">unlockError!</label>
+			<nail x="-697" y="161"/>
+			<nail x="-195" y="161"/>
 		</transition>
-		<transition id="id35">
-			<source ref="id30"/>
+		<transition id="id41">
+			<source ref="id31"/>
 			<target ref="id28"/>
+			<label kind="synchronisation" x="-646" y="-51">pressUnlockFinal!</label>
+		</transition>
+		<transition id="id42">
+			<source ref="id29"/>
+			<target ref="id32"/>
+			<label kind="guard" x="187" y="161">mqttLockTimer&gt;=10</label>
+			<label kind="synchronisation" x="213" y="178">lockError!</label>
+			<nail x="263" y="161"/>
+			<nail x="-195" y="161"/>
+		</transition>
+		<transition id="id43">
+			<source ref="id30"/>
+			<target ref="id29"/>
+			<label kind="synchronisation" x="128" y="-51">pressLockFinal!</label>
+		</transition>
+		<transition id="id44">
+			<source ref="id32"/>
+			<target ref="id30"/>
 			<label kind="synchronisation" x="-85" y="-59">mqttSendLock?</label>
 			<label kind="assignment" x="-93" y="-34">mqttLockTimer :=0</label>
 		</transition>
-		<transition id="id36">
-			<source ref="id29"/>
-			<target ref="id30"/>
-			<label kind="synchronisation" x="-382" y="42">unlockConfirmed!</label>
-			<nail x="-314" y="42"/>
-		</transition>
-		<transition id="id37">
-			<source ref="id30"/>
-			<target ref="id29"/>
+		<transition id="id45">
+			<source ref="id32"/>
+			<target ref="id31"/>
 			<label kind="synchronisation" x="-383" y="-59">mqttSendUnlock?</label>
 			<label kind="assignment" x="-399" y="-34">mqttUnlockTimer:=0</label>
 		</transition>
-		<transition id="id38">
-			<source ref="id30"/>
-			<target ref="id31"/>
+		<transition id="id46">
+			<source ref="id32"/>
+			<target ref="id33"/>
 			<label kind="synchronisation" x="-136" y="-110">heartBeat?</label>
 			<nail x="-144" y="-102"/>
 		</transition>
-		<transition id="id39">
-			<source ref="id31"/>
-			<target ref="id30"/>
+		<transition id="id47">
+			<source ref="id33"/>
+			<target ref="id32"/>
 			<label kind="synchronisation" x="-323" y="-119">sendHeartBeat!</label>
 		</transition>
 	</template>
 	<template>
 		<name>Lock</name>
-		<parameter>chan &amp;pressUnlock, chan &amp;pressLock</parameter>
+		<parameter>urgent chan &amp;pressUnlock, urgent chan &amp;pressLock</parameter>
 		<declaration>clock lockTime;
 bool unlocked = false;
 </declaration>
-		<location id="id40" x="-272" y="-51">
-			<name x="-297" y="-85">Locked</name>
+		<location id="id48" x="-272" y="93">
 		</location>
-		<location id="id41" x="-136" y="93">
-			<name x="-146" y="59">Unlocking</name>
+		<location id="id49" x="-272" y="-51">
+			<name x="-297" y="-93">Locked</name>
 		</location>
-		<location id="id42" x="-408" y="93">
-			<name x="-442" y="50">Locking</name>
+		<location id="id50" x="17" y="85">
+			<name x="7" y="51">Unlocking</name>
+			<committed/>
 		</location>
-		<location id="id43" x="-272" y="255">
+		<location id="id51" x="-510" y="93">
+			<name x="-595" y="85">Locking</name>
+		</location>
+		<location id="id52" x="-272" y="255">
 			<name x="-306" y="272">Unlocked</name>
 		</location>
-		<init ref="id40"/>
-		<transition id="id44">
-			<source ref="id43"/>
-			<target ref="id42"/>
-			<label kind="guard" x="-348" y="68">unlocked == true</label>
-			<label kind="synchronisation" x="-348" y="85">pressLock?</label>
-			<nail x="-272" y="119"/>
+		<location id="id53" x="-280" y="-178">
+			<committed/>
+		</location>
+		<init ref="id49"/>
+		<transition id="id54">
+			<source ref="id48"/>
+			<target ref="id51"/>
+			<label kind="synchronisation" x="-450" y="93">lockConfirmedFinal!</label>
 		</transition>
-		<transition id="id45">
-			<source ref="id42"/>
-			<target ref="id40"/>
-			<label kind="assignment" x="-484" y="-8">unlocked = false</label>
+		<transition id="id55">
+			<source ref="id52"/>
+			<target ref="id48"/>
+			<label kind="guard" x="-408" y="161">unlocked == true</label>
+			<label kind="synchronisation" x="-357" y="178">pressLock?</label>
 		</transition>
-		<transition id="id46">
-			<source ref="id43"/>
-			<target ref="id42"/>
-			<label kind="guard" x="-612" y="178">lockTime&lt;=10 &amp;&amp; unlocked == true</label>
+		<transition id="id56">
+			<source ref="id53"/>
+			<target ref="id49"/>
+			<label kind="synchronisation" x="-204" y="-136">lockConfirmedFinal!</label>
+			<nail x="-204" y="-127"/>
 		</transition>
-		<transition id="id47">
-			<source ref="id41"/>
-			<target ref="id43"/>
-			<label kind="assignment" x="-195" y="178">lockTime := 0,
+		<transition id="id57">
+			<source ref="id49"/>
+			<target ref="id53"/>
+			<label kind="synchronisation" x="-442" y="-136">pressLock?</label>
+			<nail x="-357" y="-127"/>
+		</transition>
+		<transition id="id58">
+			<source ref="id51"/>
+			<target ref="id49"/>
+			<label kind="assignment" x="-493" y="-51">unlocked = false</label>
+			<nail x="-510" y="-51"/>
+		</transition>
+		<transition id="id59">
+			<source ref="id52"/>
+			<target ref="id51"/>
+			<label kind="guard" x="-603" y="263">lockTime&lt;=10 &amp;&amp; unlocked == true</label>
+			<nail x="-510" y="255"/>
+		</transition>
+		<transition id="id60">
+			<source ref="id50"/>
+			<target ref="id52"/>
+			<label kind="synchronisation" x="-170" y="238">unlockConfirmedFinal!</label>
+			<label kind="assignment" x="-170" y="255">lockTime := 0,
 unlocked = true</label>
+			<nail x="17" y="255"/>
 		</transition>
-		<transition id="id48">
-			<source ref="id40"/>
-			<target ref="id41"/>
-			<label kind="guard" x="-204" y="-8">unlocked == false</label>
-			<label kind="synchronisation" x="-204" y="-25">pressUnlock?</label>
+		<transition id="id61">
+			<source ref="id49"/>
+			<target ref="id50"/>
+			<label kind="guard" x="-136" y="-51">unlocked == false</label>
+			<label kind="synchronisation" x="-136" y="-68">pressUnlock?</label>
+			<nail x="17" y="-51"/>
 		</transition>
 	</template>
 	<template>
 		<name>User</name>
-		<location id="id49" x="-646" y="-127">
+		<location id="id62" x="-646" y="-127">
 			<name x="-697" y="-170">WaitForInput</name>
 		</location>
-		<init ref="id49"/>
-		<transition id="id50">
-			<source ref="id49"/>
-			<target ref="id49"/>
+		<init ref="id62"/>
+		<transition id="id63">
+			<source ref="id62"/>
+			<target ref="id62"/>
 			<label kind="synchronisation" x="-816" y="-119">pressLock!</label>
 			<nail x="-722" y="-17"/>
 			<nail x="-790" y="-76"/>
 		</transition>
-		<transition id="id51">
-			<source ref="id49"/>
-			<target ref="id49"/>
+		<transition id="id64">
+			<source ref="id62"/>
+			<target ref="id62"/>
 			<label kind="synchronisation" x="-586" y="-119">pressUnlock!</label>
 			<nail x="-501" y="-42"/>
 			<nail x="-586" y="-8"/>
@@ -308,12 +378,12 @@ unlocked = true</label>
 	</template>
 	<system>// Place template instantiations here.
 User_System = User();
-Lock_System = Lock(pressUnlock, pressLock);
+Lock_System = Lock(pressUnlockFinal, pressLockFinal);
 Backend_System = Backend(unlock, lock, lockConfirmed, unlockConfirmed, lockError, mqttSendLock, mqttSendUnlock, unlockError);
 Frontend_System = Frontend(pressLock, pressUnlock, unlockError, lockError, requestComplete);
-MQTT_System = MQTT(mqttSendUnlock, mqttSendLock);
+MQTT_System = MQTT(mqttSendUnlock, mqttSendLock,lockConfirmedFinal,unlockConfirmedFinal);
 // List one or more processes to be composed into a system.
-system User_System, Backend_System, MQTT_System, Frontend_System;
+system User_System, Backend_System, MQTT_System, Frontend_System, Lock_System;
 
 </system>
 	<queries>
