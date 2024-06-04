@@ -354,44 +354,44 @@ system User_process, Frontend_process, Backend_process, MQTT_process, Lock_proce
 	<queries>
 		<query>
 			<formula>A[] not deadlock</formula>
-			<comment/>
-			<result outcome="success" type="quality" timestamp="2024-06-01 20:23:50 +0200">
+			<comment>Check for Deadlocks in the system</comment>
+			<result outcome="success" type="quality" timestamp="2024-06-02 13:37:48 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>E&lt;&gt;Lock_process.unlocked</formula>
-			<comment/>
+			<comment>is Unlocked state reachable</comment>
 			<result outcome="success" type="quality" timestamp="2024-06-01 19:55:46 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>E&lt;&gt;Lock_process.locked</formula>
-			<comment/>
+			<comment>Is locked state reachable</comment>
 			<result outcome="success" type="quality" timestamp="2024-06-01 20:05:56 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>E&lt;&gt; Frontend_process.sendUnlockReqToBackend imply Lock_process.unlocked</formula>
-			<comment/>
+			<comment>If frontend presses unlock door, it implys that the door is unlocked</comment>
 			<result outcome="success" type="quality" timestamp="2024-06-01 20:09:24 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>E&lt;&gt; Frontend_process.sendLockReqToBackend imply Lock_process.locked</formula>
-			<comment/>
+			<comment>If frontend presses unlock door, it implys that the door gets locked</comment>
 			<result outcome="success" type="quality" timestamp="2024-06-01 20:09:48 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>A&lt;&gt; ((Lock_process.unlocked and Lock_process.unlockTimer &gt;= 10) imply  Lock_process.locked)</formula>
-			<comment/>
+			<comment>If door is in unlocked state, it will lock automaticly after 10 seconds.</comment>
 			<result outcome="success" type="quality" timestamp="2024-06-01 20:16:52 +0200">
 			</result>
 		</query>
 		<query>
 			<formula>A&lt;&gt; ((Lock_process.unlocking and Lock_process.unlockTimer &gt;= 10) imply  Lock_process.locked)</formula>
-			<comment/>
-			<result outcome="success" type="quality" timestamp="2024-06-01 20:18:50 +0200">
+			<comment>If door is not unlocked within 10 seconds of issued command, the door is not unlocked at all.</comment>
+			<result outcome="success" type="quality" timestamp="2024-06-02 13:41:11 +0200">
 			</result>
 		</query>
 	</queries>
